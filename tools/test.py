@@ -241,8 +241,9 @@ def main():
     if rank == 0:
         if args.out:
             print(f'\nwriting results to {args.out}')
-            assert False
-            #mmcv.dump(outputs['bbox_results'], args.out)
+            # outputs is a plain list for 3D detection (no mask branch)
+            bbox_results = outputs['bbox_results'] if isinstance(outputs, dict) else outputs
+            mmcv.dump(bbox_results, args.out)
         kwargs = {} if args.eval_options is None else args.eval_options
         kwargs['jsonfile_prefix'] = osp.join('test', args.config.split(
             '/')[-1].split('.')[-2], time.ctime().replace(' ', '_').replace(':', '_'))
